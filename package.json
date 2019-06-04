@@ -1,5 +1,5 @@
 {
-  "name": "nearley",
+  "name": "@mongodb-forks/nearley",
   "version": "2.16.0",
   "description": "Simple, fast, powerful parser toolkit for JavaScript.",
   "main": "lib/nearley.js",
@@ -42,7 +42,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hardmath123/nearley.git"
+    "url": "https://github.com/mongodb-forks/nearley.git"
   },
   "devDependencies": {
     "@types/moo": "^0.3.0",
