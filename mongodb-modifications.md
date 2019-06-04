@@ -8,5 +8,5 @@ tbd
 
 ## Version History
 
-- v1.0.0: Corresponds to nearley v2.16.0
+- v0.1.0: Corresponds to nearley v2.16.0
 
