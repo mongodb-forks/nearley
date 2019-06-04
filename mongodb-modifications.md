@@ -4,7 +4,7 @@ This file details the modifications made to nearley as compared to the upstream.
 
 ## Differences
 
-tbd
+- Bugfix for https://github.com/kach/nearley/issues/318 (multiple-include)
 
 ## Version History
 
