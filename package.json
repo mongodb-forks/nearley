@@ -1,5 +1,5 @@
 {
-  "name": "@mongodb-forks/nearley",
+  "name": "@mongodb-js/nearley",
   "version": "0.1.0",
   "description": "Simple, fast, powerful parser toolkit for JavaScript.",
   "main": "lib/nearley.js",
