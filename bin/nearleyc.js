@@ -10,6 +10,7 @@ var version = require('../package.json').version;
 
 opts.version(version, '-v, --version')
     .arguments('<file.ne>')
+    .option('-l, --lexer [filename.js]', 'File with lexer to use with grammar', null)
     .option('-o, --out [filename.js]', 'File to output to (defaults to stdout)', false)
     .option('-e, --export [name]', 'Variable to set parser to', 'grammar')
     .option('-q, --quiet', 'Suppress linter')
@@ -17,6 +18,7 @@ opts.version(version, '-v, --version')
     .parse(process.argv);
 
 
+var lexer = opts.lexer ? fs.createReadStream(opts.lexer) : null;
 var input = opts.args[0] ? fs.createReadStream(opts.args[0]) : process.stdin;
 var output = opts.out ? fs.createWriteStream(opts.out) : process.stdout;
 
@@ -25,14 +27,35 @@ var parser = new nearley.Parser(parserGrammar);
 var generate = require('../lib/generate.js');
 var lint = require('../lib/lint.js');
 
-input
-    .pipe(new StreamWrapper(parser))
-    .on('finish', function() {
-        parser.feed('\n');
-        var c = Compile(
-            parser.results[0],
-            Object.assign({version: version}, opts)
-        );
-        if (!opts.quiet) lint(c, {'out': process.stderr, 'version': version});
-        output.write(generate(c, opts.export));
+function parseLexer() {
+    return new Promise((resolve, reject) => {
+        if (opts.lexer) {
+            lexer
+                .pipe(new StreamWrapper(parser, true))
+                .on('finish', () => resolve())
+                .on('error', (err) => reject(err));
+        } else {
+            resolve();
+        }
     });
+}
+
+function parseGrammar() {
+    const lexerPromise = parseLexer();
+    lexerPromise.then(() => {
+        input
+            .pipe(new StreamWrapper(parser, false))
+            .on('finish', function() {
+                parser.feed('\n');
+                // console.log(JSON.stringify(parser.results[0], null, 2));
+                var c = Compile(
+                    parser.results[0],
+                    Object.assign({version: version}, opts)
+                );
+                if (!opts.quiet) lint(c, {'out': process.stderr, 'version': version});
+                output.write(generate(c, opts.export));
+            });
+        }).catch(err => {throw err});
+}
+
+parseGrammar();

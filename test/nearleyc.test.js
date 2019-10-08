@@ -100,7 +100,14 @@ describe("bin/nearleyc", function() {
         expect(stderr).toBe("");
     });
 
-
+    it("builds correctly with externally defined lexer", function () {
+        const {outPath, stdout, stderr} = externalNearleyc("grammars/external-lexer/grammar.ne", '.js', ['--lexer grammars/external-lexer/lexer.js']);
+        expect(stderr).toBe("");
+        expect(stdout).toBe("");
+        const grammar = nearley.Grammar.fromCompiled(require(`./${outPath}.js`));
+        expect(() => parse(grammar, "15 * 10")).toNotThrow();
+        expect(() => parse(grammar, "word15 * 10")).toThrow();
+    });
 })
 
 describe('nearleyc: example grammars', function() {
