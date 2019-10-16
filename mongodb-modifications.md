@@ -6,7 +6,7 @@ This file details the modifications made to nearley as compared to the upstream.
 
 - Bugfix for https://github.com/kach/nearley/issues/318 (multiple-include)
 - Added '--lexer' command line argument to include an external lexer file to be compiled
-  with the grammar.
+  with the grammar
 
 ## Version History
 
