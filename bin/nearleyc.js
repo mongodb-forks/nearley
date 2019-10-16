@@ -4,7 +4,9 @@ var fs = require('fs');
 var nearley = require('../lib/nearley.js');
 var opts = require('commander');
 var Compile = require('../lib/compile.js');
-var StreamWrapper = require('../lib/stream.js');
+var StreamWrapper = require('../lib/stream.js').StreamWrapper;
+var LexerStreamWrapper = require('../lib/stream.js').LexerStreamWrapper;
+
 
 var version = require('../package.json').version;
 
@@ -29,7 +31,7 @@ var lint = require('../lib/lint.js');
 
 function parseLexer(callback) {
     lexer
-        .pipe(new StreamWrapper(parser, true))
+        .pipe(new LexerStreamWrapper(parser))
         .on('finish', function() {
             callback();
         });
@@ -37,7 +39,7 @@ function parseLexer(callback) {
 
 function parseGrammar() {
     input
-        .pipe(new StreamWrapper(parser, false))
+        .pipe(new StreamWrapper(parser))
         .on('finish', function() {
             parser.feed('\n');
             var c = Compile(
