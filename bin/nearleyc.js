@@ -27,35 +27,30 @@ var parser = new nearley.Parser(parserGrammar);
 var generate = require('../lib/generate.js');
 var lint = require('../lib/lint.js');
 
-function parseLexer() {
-    return new Promise((resolve, reject) => {
-        if (opts.lexer) {
-            lexer
-                .pipe(new StreamWrapper(parser, true))
-                .on('finish', () => resolve())
-                .on('error', (err) => reject(err));
-        } else {
-            resolve();
-        }
-    });
+function parseLexer(callback) {
+    lexer
+        .pipe(new StreamWrapper(parser, true))
+        .on('finish', function() {
+            callback();
+        });
 }
 
 function parseGrammar() {
-    const lexerPromise = parseLexer();
-    lexerPromise.then(() => {
-        input
-            .pipe(new StreamWrapper(parser, false))
-            .on('finish', function() {
-                parser.feed('\n');
-                // console.log(JSON.stringify(parser.results[0], null, 2));
-                var c = Compile(
-                    parser.results[0],
-                    Object.assign({version: version}, opts)
-                );
-                if (!opts.quiet) lint(c, {'out': process.stderr, 'version': version});
-                output.write(generate(c, opts.export));
-            });
-        }).catch(err => {throw err});
+    input
+        .pipe(new StreamWrapper(parser, false))
+        .on('finish', function() {
+            parser.feed('\n');
+            var c = Compile(
+                parser.results[0],
+                Object.assign({version: version}, opts)
+            );
+            if (!opts.quiet) lint(c, {'out': process.stderr, 'version': version});
+            output.write(generate(c, opts.export));
+        });
 }
 
-parseGrammar();
+if (opts.lexer) {
+    parseLexer(parseGrammar);
+} else {
+    parseGrammar();
+}
