@@ -29,6 +29,16 @@ describe("bin/nearleyc", function() {
         const grammar = nearley.Grammar.fromCompiled(require(`./${outPath}.js`));
     });
 
+    it('builds for jstestfuzz', function() {
+        const {outPath, stdout, stderr} = externalNearleyc("grammars/jstestfuzz-test.ne", '.js');
+        expect(stderr).toBe("");
+        expect(stdout).toBe("");
+        const compileGrammar = require(`./${outPath}.js`).compileGrammar;
+        const compiled = compileGrammar();
+        const grammar = nearley.Grammar.fromCompiled(compiled);
+        expect(parse(grammar, "<1999>")).toEqual([ [ '<', '1999', '>' ] ]);
+    });
+
     it('builds for ES6+', function() {
         this.timeout(10000); // It takes a while to run babel!
 
