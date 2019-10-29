@@ -1,15 +1,14 @@
 @preprocessor jstestfuzz
 
 @{%
-const moo = require("moo");
-
-const lexer = moo.compile({
-  larrow: '<',
-  rarrow: '>',
-  integer: /[0-9]+/
-});
+var noSpaces = /^\S*$/;
+var word = {test: function(w) {
+    return w.match(noSpaces);
+}};
+var ws = {literal: " "};
+var number = {test: function(n) {
+    return n.constructor === Number;
+}};
 %}
 
-@lexer lexer
-
-expression -> %larrow %integer %rarrow {% parts => parts.map(p => p.value) %}
+main -> %number %ws %number %ws "some " %word "text"

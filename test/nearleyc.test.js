@@ -36,7 +36,7 @@ describe("bin/nearleyc", function() {
         const compileGrammar = require(`./${outPath}.js`).compileGrammar;
         const compiled = compileGrammar();
         const grammar = nearley.Grammar.fromCompiled(compiled);
-        expect(parse(grammar, "<1999>")).toEqual([ [ '<', '1999', '>' ] ]);
+        expect(parse(grammar, [5, " ", 10, " ", "some ", "tokenhere", "text"])).toEqual([ [ 5, ' ', 10, ' ', 'some ', 'tokenhere', 'text' ] ]);
     });
 
     it('builds for ES6+', function() {
