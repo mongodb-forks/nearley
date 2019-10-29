@@ -29,14 +29,16 @@ describe("bin/nearleyc", function() {
         const grammar = nearley.Grammar.fromCompiled(require(`./${outPath}.js`));
     });
 
-    it('builds for jstestfuzz', function() {
-        const {outPath, stdout, stderr} = externalNearleyc("grammars/jstestfuzz-test.ne", '.js');
+    it.only('builds for jstestfuzz', function() {
+        this.timeout(10000); // It takes a while to run tsc!
+        const {outPath, stdout, stderr} = externalNearleyc("grammars/jstestfuzz-test.ne", '.ts');
         expect(stderr).toBe("");
         expect(stdout).toBe("");
+        sh(`tsc ${outPath}.ts`);
         const compileGrammar = require(`./${outPath}.js`).compileGrammar;
         const compiled = compileGrammar();
         const grammar = nearley.Grammar.fromCompiled(compiled);
-        expect(parse(grammar, [5, " ", 10, " ", "some ", "tokenhere", "text"])).toEqual([ [ 5, ' ', 10, ' ', 'some ', 'tokenhere', 'text' ] ]);
+        expect(parse(grammar, [5, " ", 10, " ", "some ", "tokenhere", "text"])).toEqual([ [ 5, ' ', 10, ' ', [ 'some ', 'tokenhere', 'text' ] ] ]);
     });
 
     it('builds for ES6+', function() {
