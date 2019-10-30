@@ -29,7 +29,7 @@ describe("bin/nearleyc", function() {
         const grammar = nearley.Grammar.fromCompiled(require(`./${outPath}.js`));
     });
 
-    it.only('builds for jstestfuzz', function() {
+    it('builds for jstestfuzz', function() {
         this.timeout(10000); // It takes a while to run tsc!
         const {outPath, stdout, stderr} = externalNearleyc("grammars/jstestfuzz-test.ne", '.ts');
         expect(stderr).toBe("");

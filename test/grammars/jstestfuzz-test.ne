@@ -2,10 +2,10 @@
 @include "./jstestfuzz-test-dep.ne"
 
 @{%
-var ws = {literal: " "};
-var number = {test: function(n) {
-    return n.constructor === Number;
-}};
+const ws: NearleySymbol = {literal: " "};
+const number: NearleySymbol = {
+    test: (n) => Number.isInteger(n)
+};
 %}
 
 main -> %number %ws %number %ws second

@@ -1,10 +1,10 @@
 @preprocessor jstestfuzz
 
 @{%
-var noSpaces = /^\S*$/;
-var word = {test: function(w) {
-    return w.match(noSpaces);
-}};
+const noSpaces = /^\S*$/;
+const word: NearleySymbol = {
+    test: (w) => w.match(noSpaces)
+};
 %}
 
 second -> "some " %word "text"
