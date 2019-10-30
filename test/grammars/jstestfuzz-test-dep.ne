@@ -8,3 +8,4 @@ const word: NearleySymbol = {
 %}
 
 second -> "some " %word "text"
+second -> "some " "tokenhere"
