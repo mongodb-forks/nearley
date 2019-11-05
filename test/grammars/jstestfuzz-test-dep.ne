@@ -3,7 +3,8 @@
 @{%
 const noSpaces = /^\S*$/;
 const word: NearleySymbol = {
-    test: (w) => w.match(noSpaces)
+    test: (w) => w.match(noSpaces),
+    produce: () => Function.prototype,
 };
 %}
 

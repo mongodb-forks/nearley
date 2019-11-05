@@ -2,9 +2,13 @@
 @include "./jstestfuzz-test-dep.ne"
 
 @{%
-const ws: NearleySymbol = {literal: " "};
+const ws: NearleySymbol = {
+    test: (s) => s === " ",
+    produce: () => null,
+};
 const number: NearleySymbol = {
-    test: (n) => Number.isInteger(n)
+    test: (n) => Number.isInteger(n),
+    produce: () => null,
 };
 %}
 
