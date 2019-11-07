@@ -92,7 +92,7 @@ wordlist -> word
             | wordlist _ "," _ word {% function(d) { return d[0].concat([d[4]]); } %}
 
 completeexpression -> expr  {% function(d) { return {tokens: d[0]}; } %}
-                    | expr _ js  {% function(d) { return {tokens: d[0], postprocess: d[2]}; } %}
+                    | expr _ js  {% function(d) { return {tokens: d[0], updateContext: d[2]}; } %}
 
 expr_member ->
       word {% id %}
