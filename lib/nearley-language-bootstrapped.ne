@@ -33,7 +33,7 @@ var rules = Object.assign({
         next: 'main',
     },
 }, literals([
-    ",", "|", "$", "%", "(", ")",
+    ",", "|", "$", "%", "^", "(", ")",
     ":?", ":*", ":+",
     "@include", "@builtin", "@",
     "]",
@@ -100,6 +100,7 @@ expr_member ->
     | word "[" expressionlist "]" {% function(d) {return {macrocall: d[0], args: d[2]}} %} 
     | string "i":? {% function(d) { if (d[1]) {return insensitive(d[0]); } else {return d[0]; } } %}
     | "%" word {% function(d) {return {token: d[1]}} %}
+    | "^"  word {% function(d) {return {token: `{produce: (generator, context) => generator.get(context, "${d[1]}"), name: "${d[1]}"}`}} %}
     | charclass {% id %}
     | "(" _ expression+ _ ")" {% function(d) {return {'subexpression': d[2]} ;} %}
     | expr_member _ ebnf_modifier {% function(d) {return {'ebnf': d[0], 'modifier': d[2]}; } %}
