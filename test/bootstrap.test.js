@@ -55,10 +55,10 @@ describe('bootstrapped lexer', () => {
     })
 
     it('lexes js code', () => {
-      expect(lexTypes("{% foo % %}")).toEqual(['js'])
-      expect(lexTypes("{% function() %}")).toEqual(['js'])
-      expect(lexTypes("{% %}")).toEqual(['js'])
-      expect(lexTypes("{%%}")).toEqual(['js'])
+      expect(lexTypes("{% foo % %}")).toEqual(['jsForNearley'])
+      expect(lexTypes("{% function() %}")).toEqual(['jsForNearley'])
+      expect(lexTypes("{% %}")).toEqual(['jsForNearley'])
+      expect(lexTypes("{%%}")).toEqual(['jsForNearley'])
     })
 
     it('lexes charclasses', () => {

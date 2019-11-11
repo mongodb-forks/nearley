@@ -17,8 +17,12 @@ var rules = Object.assign({
     ws: {match: /\s+/, lineBreaks: true, next: 'main'},
     comment: /\#.*/,
     arrow: {match: /[=-]+\>/, next: 'main'},
-    js: {
+    jsForNearley: {
         match: /\{\%(?:[^%]|\%[^}])*\%\}/,
+        value: x => x.slice(2, -2),
+    },
+    jsForUpdateContext: {
+        match: /\{\^(?:[^%]|\%[^}])*\^\}/,
         value: x => x.slice(2, -2),
     },
     word: {match: /[\w\?\+]+/, next: 'afterWord'},
@@ -77,7 +81,7 @@ prog -> prod  {% function(d) { return [d[0]]; } %}
 
 prod -> word _ %arrow _ expression+  {% function(d) { return {name: d[0], rules: d[4]}; } %}
       | word "[" wordlist "]" _ %arrow _ expression+ {% function(d) {return {macro: d[0], args: d[2], exprs: d[7]}} %}
-      | "@" _ js  {% function(d) { return {body: d[2]}; } %}
+      | "@" _ jsForNearley  {% function(d) { return {body: d[2]}; } %}
       | "@" word ws word  {% function(d) { return {config: d[1], value: d[3]}; } %}
       | "@include"  _ string {% function(d) {return {include: d[2].literal, builtin: false}} %}
       | "@builtin"  _ string {% function(d) {return {include: d[2].literal, builtin: true }} %}
@@ -92,7 +96,8 @@ wordlist -> word
             | wordlist _ "," _ word {% function(d) { return d[0].concat([d[4]]); } %}
 
 completeexpression -> expr  {% function(d) { return {tokens: d[0]}; } %}
-                    | expr _ js  {% function(d) { return {tokens: d[0], updateContext: d[2]}; } %}
+                    | expr _ jsForNearley  {% function(d) { return {tokens: d[0], postprocess: d[2]}; } %}
+                    | expr _ jsForUpdateContext  {% function(d) { return {tokens: d[0], updateContext: d[2]}; } %}
 
 expr_member ->
       word {% id %}
@@ -117,7 +122,8 @@ string -> %string {% d => ({literal: d[0].value}) %}
 
 charclass -> %charclass  {% getValue %}
 
-js -> %js  {% getValue %}
+jsForNearley -> %jsForNearley  {% getValue %}
+jsForUpdateContext -> %jsForUpdateContext  {% getValue %}
 
 _ -> ws:?
 ws -> %ws

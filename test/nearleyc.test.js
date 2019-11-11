@@ -62,15 +62,6 @@ describe("bin/nearleyc", function() {
         }
     });
 
-    it('builds for CoffeeScript', function() {
-        const {outPath, stdout, stderr} = externalNearleyc("grammars/coffeescript-test.ne", ".coffee");
-        expect(stderr).toBe("");
-        expect(stdout).toBe("");
-        sh(`coffee -c ${outPath}.coffee`);
-        const grammar = nearley.Grammar.fromCompiled(require(`./${outPath}.js`));
-        expect(parse(grammar, "ABCDEFZ12309")).toEqual([ [ 'ABCDEFZ', '12309' ] ]);
-    });
-
     it('builds for TypeScript', function() {
         this.timeout(10000); // It takes a while to run tsc!
         const {outPath, stdout, stderr} = externalNearleyc("grammars/typescript-test.ne", ".ts");
