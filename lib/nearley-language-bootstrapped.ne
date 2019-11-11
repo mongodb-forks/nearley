@@ -82,6 +82,7 @@ prog -> prod  {% function(d) { return [d[0]]; } %}
 prod -> word _ %arrow _ expression+  {% function(d) { return {name: d[0], rules: d[4]}; } %}
       | word "[" wordlist "]" _ %arrow _ expression+ {% function(d) {return {macro: d[0], args: d[2], exprs: d[7]}} %}
       | "@" _ jsForNearley  {% function(d) { return {body: d[2]}; } %}
+      | "@" _ jsForUpdateContext  {% function(d) { return {body: d[2]}; } %}
       | "@" word ws word  {% function(d) { return {config: d[1], value: d[3]}; } %}
       | "@include"  _ string {% function(d) {return {include: d[2].literal, builtin: false}} %}
       | "@builtin"  _ string {% function(d) {return {include: d[2].literal, builtin: true }} %}
