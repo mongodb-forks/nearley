@@ -16,3 +16,4 @@ This file details the modifications made to nearley as compared to the upstream.
 - v0.1.0: Corresponds to nearley v2.16.0
 - v0.2.0: Adds '--lexer' CLI argument functionality
 - v0.3.0: Adds 'generate.jstestfuzz' preprocessor option, fixes custom token matcher bug
+- v0.4.0: Adds '^' and '{^ [code here] ^}' syntax literals to support contextual unparsing
